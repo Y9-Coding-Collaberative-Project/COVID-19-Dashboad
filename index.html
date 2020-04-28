@@ -68,21 +68,30 @@
         map.setView([51.5, 0.12],2); // centered on London lat, long
         map.addLayer(carto);
         
-        L.circle([data[0][Lat],112.2707],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:2971650}).addTo(map).bindPopup('Hubei,China : 59433')
-        // L.circle([data[0][Lat] + "," + data[0][Long_]],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:data[i][Recovered]}).addTo(map).bindPopup("'" + data[0][Province_State] + " " data[0][Country_Region] + " : " + data[0][Recovered] + "'")	
+        console.log(data[0])
 /*
+        console.log(data[0])
+        L.circle([30.9756,112.2707],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:2971650}).addTo(map).bindPopup('Hubei,China : 59433')
+        recoverradius = data[0]['Confirmed'] * 1000
+        L.circle([data[0]['Lat'] + "," + data[0]['Long_']],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:recoverradius}).addTo(map).bindPopup("'" + data[0]['Province_State'] + " " + data[0]['Country_Region'] + " : " + data[0]['Recovered'] + "'")
+*/
+
         // add circles - Italy and Hubei are here as an example 
         for (i = 0; i < data.length; i ++) {
-            recoverradius = data[i][Recovered] * 50
-            if (int(recover) > 0) {
-                if (prov !== "") {
-                    L.circle([data[i][Lat] + "," + data[i][Long_]],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:recoverradius}).addTo(map).bindPopup("'" + data[i][Province_State] + " " data[i][Country_Region] + " : " + data[i][Recovered] + "'")	
+            a = data[i]['Lat']
+            b = data[i]['Long_']
+            c = data[i]['Confirmed'] * 50
+            d = data[i]['Province_State']
+            e = data[i]['Country_Region']
+            f = data[i]['Confirmed']
+            if (data[i]['Recovered'] > 0) {
+                if (data[i]['Province_State'] !== "") {
+                    L.circle([a + "," + b],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:c}).addTo(map).bindPopup("'" + d + " " + e + " : " + f + "'")	
                 } else {
-                    L.circle([data[i][Lat] + "," + data[i][Long_]],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:" + str(recoverradius) + "}).addTo(map).bindPopup("'" + data[i][Country_Region] + " : " + data[i][Recovered] + "'")
+                    L.circle([b + "," + b],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:c}).addTo(map).bindPopup("'" + e + " : " + f + "'")
                 }
             }
         }
-*/
 
         // L.circle([30.9756,112.2707],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:2971650}).addTo(map).bindPopup('Hubei,China : 59433')
 
