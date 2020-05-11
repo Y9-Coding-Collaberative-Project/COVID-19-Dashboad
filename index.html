@@ -1,4 +1,4 @@
-<html>
+<html lang="en-US">
    
     <head>
         
@@ -8,16 +8,60 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel='stylesheet' href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css'/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src='latest_data.json'></script>
-        <!-- <script src='data.js'></script> -->
-        <script src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+        <script src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js'></script>
         <script src="https://mdjhoel.github.io/Y9_19/clookup.json"></script>
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
         
         <style>
+            
             .indent{
                 margin-left: 25px;
             }
+
+            .step1 {
+                position: relative;
+                display: inline-block;
+            }
+
+            input[type=text] {
+                border: 1px solid transparent;
+                background-color: #c9c9c9;
+                padding: 10px;
+                font-size: 16px;
+                width: 100%;
+            }
+
+            .step1-items {
+                position: absolute;
+                border: 1px solid #d4d4d4;
+                border-bottom: none;
+                border-top: none;
+                z-index: 99;
+                /* position the autocomp lete items to be the same width as the container: */
+                top: 100%;
+                left: 0;
+                right: 0;
+            }
+
+            .step1-items div {
+                padding: 10px;
+                cursor: pointer;
+                background-color: #fff; 
+                border-bottom: 1px solid #d4d4d4; 
+            }
+
+            /* when hovering an item: */
+            .step1-items div:hover {
+                background-color: #e9e9e9; 
+            }
+
+            /* when navigating through the items using the arrow keys: */
+            .step1-active {
+                background-color: DodgerBlue !important; 
+                color: #ffffff; 
+            }
+
         </style>
 
     </head>
@@ -45,7 +89,11 @@
                 <input type="checkbox" name="type" id="showall" onchange="check()"> Show All
             </form>
             <h1 id="date"></h1>
-            <div id="map" style='width:100%; height:500'></div>
+            <div id="map" style='width: 50%; height: 250;'></div>
+            <form class="step1" style="width: 300px;">
+                <h3>Step 1: Enter A Geo Area</h3>
+                <input id="find" type="text" placeholder="Start Typing A Place">
+            </form>
         </div>
             
         <div class="footer">
@@ -54,10 +102,13 @@
 
     </body>
     
-    <script>
+    <script type="text/javascript">
+
+        var places = []
 
         map()
         api()
+        autocomplete(document.getElementById("find"), places)
         footer()
         
         function map() {
@@ -87,63 +138,155 @@
             allvalues = Object.values(data['Countries']);
             for (i = 0; i < allvalues.length; i++) {
                 shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
-                if (countries[shortcode] != undefined) { // prevents error by only looping if its not undefined
-                    a = countries[shortcode][0]; // gets latitude
-                    b = countries[shortcode][1]; // gets longitude
-                    c = allvalues[i]['TotalConfirmed'];
-                    d = allvalues[i]['Country'];
-                    if (c > 0) { // only draws circle if there are any confirmed cases
-                        L.circle([a,b],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:c}).addTo(map).bindPopup("'" + d + " : " + c + "'"); // draws circle with the variables as arguments
-                    }
+                a = allvalues[i]['Country'];
+                b = allvalues[i]['TotalConfirmed'];
+                places.push(a)
+                if (countries[shortcode] != undefined && b > 0) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
+                    latitude = countries[shortcode][0]; // gets latitude
+                    longitude = countries[shortcode][1]; // gets longitude
+                    L.circle([latitude,longitude],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:b}).addTo(map).bindPopup("'" + a + " : " + b + "'"); // draws circle with the variables as arguments
                 }
             }
+            console.log(places)
         } 
+        
+        function autocomplete(inp, arr) {
+            // the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values
+            var currentFocus;
+            // execute a function when someone writes in the text field:
+            inp.addEventListener("input", function(e) {
+                var a, b, i, val = this.value;
+                // close any already open lists of autocompleted values
+                closeAllLists();
+                if (!val) { return false;}
+                currentFocus = -1;
+                // create a DIV element that will contain the items (values):
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "step1-list");
+                a.setAttribute("class", "step1-items");
+                // append the DIV element as a child of the autocomplete container:
+                this.parentNode.appendChild(a);
+                //for each item in the array...
+                for (i = 0; i < arr.length; i++) {
+                    // check if the item starts with the same letters as the text field value:
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    // create a DIV element for each matching element:
+                    b = document.createElement("DIV");
+                    // make the matching letters bold:
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    // insert a input field that will hold the current array item's value:
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    // execute a function when someone clicks on the item value (DIV element):
+                    b.addEventListener("click", function(e) {
+                        // insert the value for the autocomplete text field:
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        // close the list of autocompleted values, or any other open lists of autocompleted values:
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                    }
+                }
+            });
+            //execute a function presses a key on the keyboard:
+            inp.addEventListener("keydown", function(e) {
+                var x = document.getElementById(this.id + "step1-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    // If the arrow DOWN key is pressed, increase the currentFocus variable:
+                    currentFocus++;
+                    // and and make the current item more visible:
+                    addActive(x);
+                } else if (e.keyCode == 38) { //up
+                    // If the arrow UP key is pressed, decrease the currentFocus variable:
+                    currentFocus--;
+                    // and and make the current item more visible:
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    // If the ENTER key is pressed, prevent the form from being submitted,
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                    // and simulate a click on the "active" item:
+                    if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            function addActive(x) {
+                // a function to classify an item as "active":
+                if (!x) return false;
+                // start by removing the "active" class on all items:
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                // add class "step1-active":
+                x[currentFocus].classList.add("step1-active");
+            }
+            function removeActive(x) {
+                // a function to remove the "active" class from all autocomplete items:
+                for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("step1-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                // close all autocomplete lists in the document, except the one passed as an argument:
+                var x = document.getElementsByClassName("step1-items");
+                for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+                }
+            }
+            // execute a function when someone clicks in the document:
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+        });
+        }
 
         function all1() {
             if (document.getElementById("closed").checked == true) {
-                document.getElementById("deaths").checked = true
-                document.getElementById("recoveries").checked = true
+                document.getElementById("deaths").checked = true;
+                document.getElementById("recoveries").checked = true;
             } else {
-                document.getElementById("deaths").checked = false
-                document.getElementById("recoveries").checked = false
+                document.getElementById("deaths").checked = false;
+                document.getElementById("recoveries").checked = false;
             }
         }
 
         function part1() {
             if (document.getElementById("deaths").checked == true && document.getElementById("recoveries").checked == true) {
-                document.getElementById("closed").checked = true
-                document.getElementById("closed").indeterminate = false
+                document.getElementById("closed").checked = true;
+                document.getElementById("closed").indeterminate = false;
             } else if (document.getElementById("deaths").checked != true && document.getElementById("recoveries").checked != true) {
-                document.getElementById("closed").checked = false
-                document.getElementById("closed").indeterminate = false
+                document.getElementById("closed").checked = false;
+                document.getElementById("closed").indeterminate = false;
             } else {
-                document.getElementById("closed").checked = false
-                document.getElementById("closed").indeterminate = true
+                document.getElementById("closed").checked = false;
+                document.getElementById("closed").indeterminate = true;
             }
         }
 
         function all2() {
             if (document.getElementById("new").checked == true) {
-                document.getElementById("new_confirmed").checked = true
-                document.getElementById("new_deaths").checked = true
-                document.getElementById("new_recoveries").checked = true
+                document.getElementById("new_confirmed").checked = true;
+                document.getElementById("new_deaths").checked = true;
+                document.getElementById("new_recoveries").checked = true;
             } else {
-                document.getElementById("new_confirmed").checked = false
-                document.getElementById("new_deaths").checked = false
-                document.getElementById("new_recoveries").checked = false
+                document.getElementById("new_confirmed").checked = false;
+                document.getElementById("new_deaths").checked = false;
+                document.getElementById("new_recoveries").checked = false;
             }
         }
 
         function part2() {
             if (document.getElementById("new_confirmed").checked == true && document.getElementById("new_deaths").checked == true && document.getElementById("new_recoveries").checked == true) {
-                document.getElementById("new").checked = true
-                document.getElementById("new").indeterminate = false
+                document.getElementById("new").checked = true;
+                document.getElementById("new").indeterminate = false;
             } else if (document.getElementById("new_confirmed").checked != true && document.getElementById("new_deaths").checked != true && document.getElementById("new_recoveries").checked != true) {
-                document.getElementById("new").checked = false
-                document.getElementById("new").indeterminate = false
+                document.getElementById("new").checked = false;
+                document.getElementById("new").indeterminate = false;
             } else {
-                document.getElementById("new").checked = false
-                document.getElementById("new").indeterminate = true
+                document.getElementById("new").checked = false;
+                document.getElementById("new").indeterminate = true;
             }
         }
 
@@ -161,6 +304,27 @@
         //         ctx.fillText(text[i], 20, b);
         //     }
         // }
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+            ['Task', 'Hours per Day'],
+            ['Work', 10000],
+            ['Eat', 200],
+            ['TV', 40000],
+            ['Gym', 20],
+            ['Sleep', 80000]
+            ]);
+
+            // Optional; add a title and set the width and height of the chart
+            var options = {'title':'My Average Day', 'width':550, 'height':400};
+
+            // Display the chart inside the <div> element with id="piechart"
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
 
         function footer() {
             var x = document.lastModified;
