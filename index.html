@@ -121,10 +121,11 @@
         <div class="content">
 
             <div class="columns" id="left_column">
-                <form class="step1">
+                <div class="step1">
                     <h1>Find The Stats For Your Country</h1>
-                    <input id="find" type="text" placeholder="Start Typing A Country"><button id="submit">Enter</button>
-                </form>
+                    <input id="find" type="text" placeholder="Start Typing A Country"><button id="submit" onclick="country()">Enter</button>
+                </div>
+                <p id="answer"></p>
             </div>
 
             <div class="columns" id="middle_column">
@@ -198,6 +199,11 @@
                 shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
                 a = allvalues[i]['Country'];
                 b = allvalues[i]['TotalConfirmed'];
+                c = allvalues[i]['TotalDeaths'];
+                d = allvalues[i]['TotalRecovered'];
+                e = allvalues[i]['NewConfirmed'];
+                f = allvalues[i]['NewDeaths'];
+                g = allvalues[i]['NewRecovered'];
                 places.push(a)
                 if (countries[shortcode] != undefined && b > 0) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
                     latitude = countries[shortcode][0]; // gets latitude
@@ -206,7 +212,7 @@
                 }
             }
             console.log(places)
-        } 
+        }
         
         function autocomplete(inp, arr) {
             // the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values
@@ -305,9 +311,21 @@
             input.addEventListener("keyup", function(event) {
                 if (event.keyCode === 13) {
                     event.preventDefault();
-                    document.getElementById("myBtn").click();
+                    document.getElementById("submit").click();
                 }
             });
+        }
+
+        function country() {
+            correct = document.getElementById("find").value
+            console.log(correct)
+            for (i = 0; i < allvalues.length; i++) {
+                if (allvalues[i]["Country"] = correct) {
+                    console.log(allvalues[i])
+                    document.getElementById("answer").innerHTML = allvalues[i]["Country"]
+                    // document.getElementById("answer").innerHTML = allvalues[i]['TotalConfirmed'] + "<br>" + allvalues[i]['TotalDeaths'] + "<br>" + allvalues[i]['TotalRecovered'] + "<br>" + allvalues[i]['NewConfirmed'] + "<br>" + allvalues[i]['NewDeaths'] + "<br>" + allvalues[i]['NewRecovered']
+                }
+            }
         }
 
         function all1() {
