@@ -15,6 +15,27 @@
         
         <style>
             
+            .columns {
+                float: left;
+                padding: 8px;
+                height: 90%;
+            }
+
+            #left_column {
+                width: 18.75%;
+                background-color: palegoldenrod;
+            }
+
+            #middle_column {
+                width: 50%;
+                background-color: limegreen;
+            }
+
+            #right_column {
+                width: 31.25%;
+                background-color: mediumpurple;
+            }
+
             .indent{
                 margin-left: 25px;
             }
@@ -24,12 +45,24 @@
                 display: inline-block;
             }
 
-            input[type=text] {
+            #find {
                 border: 1px solid transparent;
-                background-color: #c9c9c9;
-                padding: 10px;
+                padding: 5px;
+                width: 75%;
+                height: 35px;
                 font-size: 16px;
-                width: 100%;
+                background-color: #c9c9c9;
+            }
+
+            #submit {
+                border: 1px solid transparent;
+                padding: 5px;
+                width: 25%;
+                height: 35px;
+                font-size: 16px;
+                background-color: DodgerBlue;
+                color: #fff;
+                cursor: pointer;
             }
 
             .step1-items {
@@ -71,30 +104,41 @@
         <div class="navbar">
             <a class="main" href="index.html">Home</a>
             <a href="about_us.html">About us</a>
-            <a href="abou_virus.html">What can we do?</a>
+            <a href="about_virus.html">What can we do?</a>
             <a href="fun.html">Fun</a>
         </div>
         
         <div class="content">
-            <form id="select">
-                <input type="checkbox" name="type" id="active" onchange="check()"> Active Cases<br>
-                <input type="checkbox" name="type" id="closed" onchange="all1()"> Closed Cases<br>
-                <input type="checkbox" name="type" class="indent" id="deaths" onchange="part1()"> Deaths<br>
-                <input type="checkbox" name="type" class="indent" id="recoveries" onchange="part1()"> Recoveries<br>
-                <input type="checkbox" name="type" id="new" onchange="all2()"> New Cases<br>
-                <input type="checkbox" name="type" class="indent" id="new_confirmed" onchange="part2()"> New Confirmed<br>
-                <input type="checkbox" name="type" class="indent" id="new_deaths" onchange="part2()"> New Deaths<br>
-                <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="part2()"> New Recoveries<br>
-                <input type="checkbox" name="type" id="total" onchange="check()"> Total Confirmed Cases<br>
-                <input type="checkbox" name="type" id="showall" onchange="check()"> Show All
-            </form>
-            <h1 id="date"></h1>
-            <div id="map" style='width: 50%; height: 250;'></div>
-            <form class="step1" style="width: 300px;">
-                <h3>Step 1: Enter A Geo Area</h3>
-                <input id="find" type="text" placeholder="Start Typing A Place">
-            </form>
-            <div id="piechart"></div>
+
+            <div class="columns" id="left_column">
+                <form class="step1">
+                    <h1>Find The Stats For Your Country</h1>
+                    <input id="find" type="text" placeholder="Start Typing A Country"><button id="submit">Enter</button>
+                </form>
+            </div>
+
+            <div class="columns" id="middle_column">
+                <form id="select">
+                    <input type="checkbox" name="type" id="active" onchange="#"> Active Cases<br>
+                    <input type="checkbox" name="type" id="closed" onchange="all1()"> Closed Cases<br>
+                    <input type="checkbox" name="type" class="indent" id="deaths" onchange="part1()"> Deaths<br>
+                    <input type="checkbox" name="type" class="indent" id="recoveries" onchange="part1()"> Recoveries<br>
+                    <input type="checkbox" name="type" id="new" onchange="all2()"> New Cases<br>
+                    <input type="checkbox" name="type" class="indent" id="new_confirmed" onchange="part2()"> New Confirmed<br>
+                    <input type="checkbox" name="type" class="indent" id="new_deaths" onchange="part2()"> New Deaths<br>
+                    <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="part2()"> New Recoveries<br>
+                    <input type="checkbox" name="type" id="total" onchange="#"> Total Confirmed Cases<br>
+                    <input type="checkbox" name="type" id="showall" onchange="#"> Show All
+                </form>
+                <h1 id="date"></h1>
+                <div id="map" style='width: 100%; height: 300;'></div>
+            </div>
+
+            <div class="columns" id="right_column">
+                <h1>General Global Stats</h1>
+                <div id="piechart"></div>
+            </div>
+            
         </div>
             
         <div class="footer">
@@ -111,6 +155,7 @@
         map();
         api();
         autocomplete(document.getElementById("find"), places);
+        keybind();
         footer();
         
         function map() {
@@ -245,6 +290,16 @@
         });
         }
 
+        function keybind() {
+            var input = document.getElementById("find");
+            input.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("myBtn").click();
+                }
+            });
+        }
+
         function all1() {
             if (document.getElementById("closed").checked == true) {
                 document.getElementById("deaths").checked = true;
@@ -312,14 +367,17 @@
         google.charts.setOnLoadCallback(drawChart);
         
         function drawChart() {
+            total = global[1]
+            active = global[1] - global[3] - global[5]
+            console.log(active)
             var graph = google.visualization.arrayToDataTable([
                 ['Type', 'Amount'],
-                ['Confirmed', global[1]],
-                ['Deaths', global[3]],
-                ['Recoveries', global[5]],
+                ['Active', active],
+                ['Dead', global[3]],
+                ['Recovered', global[5]],
             ]);
             // Optional; add a title and set the width and height of the chart
-            var options = {'title':'World Pie Chart', 'width':550, 'height':400};
+            var options = {'title':'Confirmed Cases By Status Worldwide (' + total + ' Total)'};
             // Display the chart inside the <div> element with id="piechart"
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
             chart.draw(graph, options);
