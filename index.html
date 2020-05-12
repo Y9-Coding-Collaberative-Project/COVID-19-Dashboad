@@ -24,19 +24,19 @@
             #left_column {
                 width: 18.75%;
                 background-color: #ff8c78;
-                color: #4a4a4a;
+                color: #333333;
             }
 
             #middle_column {
                 width: 50%;
-                background-color:white;
-                color: black;
+                background-color:#750000;
+                color: white;
             }
 
             #right_column {
                 width: 31.25%;
-                background-color:#e31717;
-                color: #6b6b6b
+                background-color:#ff0000;
+                color: white;
             }
 
             .indent{
@@ -129,6 +129,9 @@
             </div>
 
             <div class="columns" id="middle_column">
+                <h1 id="date"></h1>
+                <div id="map" style='width: 100%; height: 300;'></div>
+                <br>
                 <form id="select">
                     <input type="checkbox" name="type" id="active" onchange="#"> Active Cases<br>
                     <input type="checkbox" name="type" id="closed" onchange="all1()"> Closed Cases<br>
@@ -138,11 +141,8 @@
                     <input type="checkbox" name="type" class="indent" id="new_confirmed" onchange="part2()"> New Confirmed<br>
                     <input type="checkbox" name="type" class="indent" id="new_deaths" onchange="part2()"> New Deaths<br>
                     <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="part2()"> New Recoveries<br>
-                    <input type="checkbox" name="type" id="total" onchange="#"> Total Confirmed Cases<br>
-                    <input type="checkbox" name="type" id="showall" onchange="#"> Show All
+                    <input type="checkbox" name="type" id="total" onchange="api()"> Total Confirmed Cases<br>
                 </form>
-                <h1 id="date"></h1>
-                <div id="map" style='width: 100%; height: 300;'></div>
             </div>
 
             <div class="columns" id="right_column">
@@ -163,13 +163,13 @@
         var places = [];
         var global = [];
 
-        map();
+        setMap();
         api();
         autocomplete(document.getElementById("find"), places);
         keybind();
         footer();
         
-        function map() {
+        function setMap() {
             map = new L.Map("map"); // creates a map at HTML div called "map"
             var cartocdn = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
             cartoAttrib = "Carto geodatabase is good for this application"; // ???
@@ -195,6 +195,10 @@
             data = response;
             global = Object.values(data['Global'])
             allvalues = Object.values(data['Countries']);
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            })
+            // setMap()
             for (i = 0; i < allvalues.length; i++) {
                 shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
                 a = allvalues[i]['Country'];
@@ -205,10 +209,12 @@
                 f = allvalues[i]['NewDeaths'];
                 g = allvalues[i]['NewRecovered'];
                 places.push(a)
-                if (countries[shortcode] != undefined && b > 0) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
+                if (countries[shortcode] != undefined) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
                     latitude = countries[shortcode][0]; // gets latitude
                     longitude = countries[shortcode][1]; // gets longitude
-                    L.circle([latitude,longitude],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:b}).addTo(map).bindPopup("'" + a + " : " + b + "'"); // draws circle with the variables as arguments
+                    if (document.getElementById("total").checked == true && b > 0) {
+                        L.circle([latitude,longitude],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:b}).addTo(map).bindPopup("'" + a + " : " + b + "'"); // draws circle with the variables as arguments
+                    }
                 }
             }
             console.log(places)
@@ -320,10 +326,9 @@
             correct = document.getElementById("find").value
             console.log(correct)
             for (i = 0; i < allvalues.length; i++) {
-                if (allvalues[i]["Country"] = correct) {
-                    console.log(allvalues[i])
-                    document.getElementById("answer").innerHTML = allvalues[i]["Country"]
-                    // document.getElementById("answer").innerHTML = allvalues[i]['TotalConfirmed'] + "<br>" + allvalues[i]['TotalDeaths'] + "<br>" + allvalues[i]['TotalRecovered'] + "<br>" + allvalues[i]['NewConfirmed'] + "<br>" + allvalues[i]['NewDeaths'] + "<br>" + allvalues[i]['NewRecovered']
+                if (allvalues[i]['Country'] == correct) {
+                    console.log(allvalues[i]);
+                    document.getElementById("answer").innerHTML = "Total Confirmed Cases: " + allvalues[i]['TotalConfirmed'] + "<br>Deaths: " + allvalues[i]['TotalDeaths'] + "<br>Recoveries: " + allvalues[i]['TotalRecovered'] + "<br>New Confirmed: " + allvalues[i]['NewConfirmed'] + "<br>New Deaths: " + allvalues[i]['NewDeaths'] + "<br>New Recoveries: " + allvalues[i]['NewRecovered'];
                 }
             }
         }

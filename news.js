@@ -36,11 +36,7 @@ function buildNews(NEWS) {
         // viewFunc = "viewArticle('" + i + "')"
         e.innerHTML = '<h4>' + article.title + '</h4> <button onclick="' + viewFunc + '" class="eon-text">More Info</button>'
         document.getElementById('news').appendChild(e)                    
-        document.getElementById('news').appendChild(document.createElement("br"))                    
-        if (i == NEWS.articles.length) {
-            // LOOP FINISHED
-        }
-
+        document.getElementById('news').appendChild(document.createElement("br"))
     }
 }
 
