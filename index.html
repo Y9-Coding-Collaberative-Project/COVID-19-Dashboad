@@ -2,7 +2,7 @@
    
     <head>
         
-        <title>Fill This In</title>
+        <title>Everything You Need To Know About The Coronavirus</title>
         
         <link rel="stylesheet" href="stylz.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -133,14 +133,14 @@
                 <div id="map" style='width: 100%; height: 300;'></div>
                 <br>
                 <form id="select">
-                    <input type="checkbox" name="type" id="active" onchange="#"> Active Cases<br>
-                    <input type="checkbox" name="type" id="closed" onchange="all1()"> Closed Cases<br>
-                    <input type="checkbox" name="type" class="indent" id="deaths" onchange="part1()"> Deaths<br>
-                    <input type="checkbox" name="type" class="indent" id="recoveries" onchange="part1()"> Recoveries<br>
-                    <input type="checkbox" name="type" id="new" onchange="all2()"> New Cases<br>
-                    <input type="checkbox" name="type" class="indent" id="new_confirmed" onchange="part2()"> New Confirmed<br>
-                    <input type="checkbox" name="type" class="indent" id="new_deaths" onchange="part2()"> New Deaths<br>
-                    <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="part2()"> New Recoveries<br>
+                    <input type="checkbox" name="type" id="active" onchange="api()"> Active Cases<br>
+                    <input type="checkbox" name="type" id="closed" onchange="api();all1()"> Closed Cases<br>
+                    <input type="checkbox" name="type" class="indent" id="deaths" onchange="api();part1()"> Deaths<br>
+                    <input type="checkbox" name="type" class="indent" id="recoveries" onchange="api();part1()"> Recoveries<br>
+                    <input type="checkbox" name="type" id="new" onchange="api();all2()"> New Cases<br>
+                    <input type="checkbox" name="type" class="indent" id="new_confirmed" onchange="api();part2()"> New Confirmed<br>
+                    <input type="checkbox" name="type" class="indent" id="new_deaths" onchange="api();part2()"> New Deaths<br>
+                    <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="api();part2()"> New Recoveries<br>
                     <input type="checkbox" name="type" id="total" onchange="api()"> Total Confirmed Cases<br>
                 </form>
             </div>
@@ -166,7 +166,7 @@
         setMap();
         api();
         autocomplete(document.getElementById("find"), places);
-        keybind();
+        keyBind();
         footer();
         
         function setMap() {
@@ -195,10 +195,6 @@
             data = response;
             global = Object.values(data['Global'])
             allvalues = Object.values(data['Countries']);
-            map.eachLayer(function (layer) {
-                map.removeLayer(layer);
-            })
-            // setMap()
             for (i = 0; i < allvalues.length; i++) {
                 shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
                 a = allvalues[i]['Country'];
@@ -213,7 +209,22 @@
                     latitude = countries[shortcode][0]; // gets latitude
                     longitude = countries[shortcode][1]; // gets longitude
                     if (document.getElementById("total").checked == true && b > 0) {
-                        L.circle([latitude,longitude],{color:'red',fillColor:'#f03',fillOpacity:0.5,radius:b}).addTo(map).bindPopup("'" + a + " : " + b + "'"); // draws circle with the variables as arguments
+                        L.circle([latitude,longitude],{color:'black',radius:b}).addTo(map).bindPopup("'" + a + " : " + b.toLocaleString() + "'"); // draws circle with the variables as arguments
+                    }
+                    if (document.getElementById("deaths").checked == true && c > 0) {
+                        L.circle([latitude,longitude],{color:'red',radius:c}).addTo(map).bindPopup("'" + a + " : " + c.toLocaleString() + "'"); // draws circle with the variables as arguments
+                    }
+                    if (document.getElementById("recoveries").checked == true && d > 0) {
+                        L.circle([latitude,longitude],{color:'green',radius:d}).addTo(map).bindPopup("'" + a + " : " + d.toLocaleString() + "'"); // draws circle with the variables as arguments
+                    }
+                    if (document.getElementById("new_confirmed").checked == true && e > 0) {
+                        L.circle([latitude,longitude],{color:'grey',radius:e}).addTo(map).bindPopup("'" + a + " : " + e.toLocaleString() + "'"); // draws circle with the variables as arguments
+                    }
+                    if (document.getElementById("new_deaths").checked == true && f > 0) {
+                        L.circle([latitude,longitude],{color:'orange',radius:f}).addTo(map).bindPopup("'" + a + " : " + f.toLocaleString() + "'"); // draws circle with the variables as arguments
+                    }
+                    if (document.getElementById("new_recoveries").checked == true && g > 0) {
+                        L.circle([latitude,longitude],{color:'blue',radius:g}).addTo(map).bindPopup("'" + a + " : " + g.toLocaleString() + "'"); // draws circle with the variables as arguments
                     }
                 }
             }
@@ -312,7 +323,7 @@
         });
         }
 
-        function keybind() {
+        function keyBind() {
             var input = document.getElementById("find");
             input.addEventListener("keyup", function(event) {
                 if (event.keyCode === 13) {
@@ -323,12 +334,16 @@
         }
 
         function country() {
-            correct = document.getElementById("find").value
-            console.log(correct)
+            document.getElementById("answer").innerHTML = "";
+            correct = document.getElementById("find").value;
+            console.log(correct);
+            if (places.includes(correct) == false ) {
+                alert("The Country You Entered Is Not Valid, Please Retry Again");
+            }
             for (i = 0; i < allvalues.length; i++) {
                 if (allvalues[i]['Country'] == correct) {
                     console.log(allvalues[i]);
-                    document.getElementById("answer").innerHTML = "Total Confirmed Cases: " + allvalues[i]['TotalConfirmed'] + "<br>Deaths: " + allvalues[i]['TotalDeaths'] + "<br>Recoveries: " + allvalues[i]['TotalRecovered'] + "<br>New Confirmed: " + allvalues[i]['NewConfirmed'] + "<br>New Deaths: " + allvalues[i]['NewDeaths'] + "<br>New Recoveries: " + allvalues[i]['NewRecovered'];
+                    document.getElementById("answer").innerHTML = "Total Confirmed Cases: " + allvalues[i]['TotalConfirmed'].toLocaleString() + "<br>Deaths: " + allvalues[i]['TotalDeaths'].toLocaleString() + "<br>Recoveries: " + allvalues[i]['TotalRecovered'].toLocaleString() + "<br>New Confirmed: " + allvalues[i]['NewConfirmed'].toLocaleString() + "<br>New Deaths: " + allvalues[i]['NewDeaths'].toLocaleString() + "<br>New Recoveries: " + allvalues[i]['NewRecovered'].toLocaleString();
                 }
             }
         }
@@ -400,9 +415,9 @@
         google.charts.setOnLoadCallback(drawChart);
         
         function drawChart() {
-            total = global[1]
-            active = global[1] - global[3] - global[5]
-            console.log(active)
+            total = global[1].toLocaleString();
+            active = global[1] - global[3] - global[5];
+            console.log(active);
             var graph = google.visualization.arrayToDataTable([
                 ['Type', 'Amount'],
                 ['Active', active],
