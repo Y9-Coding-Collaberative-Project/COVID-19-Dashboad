@@ -143,6 +143,7 @@
                     <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="api();part2()"> New Recoveries<br>
                     <input type="checkbox" name="type" id="total" onchange="api()"> Total Confirmed Cases<br>
                 </form>
+                <button onclick="clear()">Clear All</button>
             </div>
 
             <div class="columns" id="right_column">
@@ -434,6 +435,10 @@
         function footer() {
             var x = document.lastModified;
             document.getElementById("demo").innerHTML = "Last Refreshed " + x;            
+        }
+
+        function clear() {
+            document.getElementById('map').reset();
         }
 
     </script>
