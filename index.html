@@ -115,7 +115,7 @@
             <a class="main" href="index.html">Home</a>
             <a href="about_us.html">About us</a>
             <a href="about_virus.html">What can we do?</a>
-            <a href="fun.html">Fun</a>
+            <a href="Fun.html">Fun</a>
         </div>
         
         <div class="content">
@@ -123,7 +123,7 @@
             <div class="columns" id="left_column">
                 <div class="step1">
                     <h1>Find The Stats For Your Country</h1>
-                    <input id="find" type="text" placeholder="Start Typing A Country"><button id="submit" onclick="country()">Enter</button>
+                    <input id="find" type="text" placeholder="Start Typing A Country" autocomplete="off"><button id="submit" onclick="country()">Enter</button>
                 </div>
                 <p id="answer"></p>
             </div>
@@ -397,21 +397,6 @@
             }
         }
 
-        // function drawbarh() {
-        //     var c = document.getElementById("BarH");
-        //     var ctx = c.getContext("2d");
-        //     c.width = 1020;
-        //     c.height = (10 + graph.length * 60);
-        //     for (i = 0; i < graph.length; i ++) {
-        //         var a = (10 + i * 60);
-        //         var b = (40 + i * 60);
-        //         ctx.fillStyle = colors[i];
-        //         ctx.fillRect(10,a,graph[i]*10,50);
-        //         ctx.fillStyle = "white"
-        //         ctx.fillText(text[i], 20, b);
-        //     }
-        // }
-
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
         
@@ -432,13 +417,15 @@
             chart.draw(graph, options);
         }
 
+/*
+        function clear() {
+            document.getElementById('map').reset();
+        }
+*/
+
         function footer() {
             var x = document.lastModified;
             document.getElementById("demo").innerHTML = "Last Refreshed " + x;            
-        }
-
-        function clear() {
-            document.getElementById('map').reset();
         }
 
     </script>
