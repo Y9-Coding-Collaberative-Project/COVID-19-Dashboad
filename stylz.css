@@ -149,3 +149,8 @@ body {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+canvas {
+    border-width: 10px;
+    border-color: black;
+}

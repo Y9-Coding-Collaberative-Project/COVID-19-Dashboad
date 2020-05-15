@@ -32,6 +32,7 @@ function buildNews(NEWS) {
         e.classList.add('card')
         e.classList.add('card-body')
         e.classList.add('newscard')
+        e.classList.add('canvas')
         viewFunc = "window.open('" + NEWS.articles[i].url + "')"
         // viewFunc = "viewArticle('" + i + "')"
         e.innerHTML = '<h4>' + article.title + '</h4> <button onclick="' + viewFunc + '" class="eon-text">More Info</button>'
