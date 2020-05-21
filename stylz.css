@@ -135,8 +135,8 @@ body {
     height: 300px;
     perspective: 1000px;
     margin-top: 50px;
-    margin-right: 50px;
     float: top;
+    margin-left: 175px;
 }
   
 .flip-card-inner {
@@ -166,7 +166,7 @@ body {
 }
   
 .flip-card-back {
-    background-color: #2980b9;
+    background-color: #ff0000;;
     color: white;
     transform: rotateY(180deg);
 }
@@ -186,4 +186,19 @@ body {
     height: 30px;
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+.grid-container {
+    display: grid;
+  grid-template-columns: auto auto auto;
+
+}
+
+#description {
+    margin-top: 50px;
+    color: rgb(29, 29, 29);
+    font-size: 20px;
+    margin-right: 100px;
+    margin-left: 100px;
+
 }
