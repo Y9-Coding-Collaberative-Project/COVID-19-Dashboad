@@ -187,18 +187,3 @@ body {
     padding-top: 20px;
     padding-bottom: 20px;
 }
-
-.grid-container {
-    display: grid;
-  grid-template-columns: auto auto auto;
-
-}
-
-#description {
-    margin-top: 50px;
-    color: rgb(29, 29, 29);
-    font-size: 20px;
-    margin-right: 100px;
-    margin-left: 100px;
-
-}

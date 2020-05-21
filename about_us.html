@@ -1,75 +1,98 @@
 <html lang="en-US">
    
-    <head>
+  <head>
+      
+      <title>Fill This In</title>
+      
+      <link rel="stylesheet" href="stylz.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      
+      <style>
         
-        <title>Fill This In</title>
+        body {
+          background-color: #e8e8e8
+        }
         
-        <link rel="stylesheet" href="stylz.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        
-        <style>
-        </style>
+        .grid-container {
+          display: grid;
+          grid-template-columns: auto auto auto;
+        }
 
-    </head>
+        #description {
+          margin-top: 50px;
+          color: rgb(29, 29, 29);
+          font-size: 20px;
+          margin-right: 100px;
+          margin-left: 100px; 
+        }
 
-    <style>
-      body {
-          background-color: #ff8c78;
-  }
-  </style>
+        #aboutus {
+          text-align: left;
+          margin-left: 10px;
+          margin-right: 10px;
+          line-height: 25px;
+        }
+
+      </style>
+
+  </head>
     
     <body>
         
-        <div class="navbar">
-            <a href="index.html">Home</a>
-            <a class="main" href="about_us.html">About us</a>
-            <a href="about_virus.html">What can we do?</a>
-            <a href="fun.html">Fun</a>
-        </div>
-        
-        <div class="content">
-            
-          <center>
-              <h1>About the Coders</h1>
-
-            <div class="grid-container">
-              <div class="grid-item">
-        
-          <div class="flip-card">
-            <div class="flip-card-inner">
-              <div class="flip-card-front">
-                <img src="Cam_icon.JPG" alt="Cam_icon" style="width:300px;height:300px;">
-              </div>
-              <div class="flip-card-back">
-                <h1>Cameron Dyer</h1> 
-                <p>Cameron's first experience with coding was with Scratch however, he quickly developed into being able to do Arduino code. Last year he bagan to start doing website coding in the form of html and css whilst still being relatively inexperieced at Javascript.</p> 
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-item">
-
-          <div class="flip-card">
-            <div class="flip-card-inner">
-              <div class="flip-card-front">
-                <img src="Hewitt_icon.jpeg" alt="Hewitt_icon" style="width:300px;height:300px;">
-              </div>
-              <div class="flip-card-back">
-                <h1>Hewitt Ho</h1> 
-                <p>Hewitt began coding early 2019 by learning the basics of html, css and javascript. Since then, he has learned advanced python and javascript. Lately he has been working on leaflet</p> 
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
+      <div class="navbar">
+          <a href="index.html">Home</a>
+          <a class="main" href="about_us.html">About us</a>
+          <a href="about_virus.html">What can we do?</a>
+          <a href="fun.html">Fun</a>
       </div>
-        <p id="description">This website is a colaberative project for their grade 9 dashboard project. Originally, there was supposed to be unit surounding robotics bu under the recent circumstances several of the subjects have needed to adapt their curiculum and this project was born. It introduced a number of new coding terms and resources such as geo json and leaflet which allowed us to create this dashboard you see. </p>
+      
+      <div class="content">
+          
+        <center>
+          
+          <h1>About the Coders</h1>
+          
+          <div class="grid-container">
+            
+            <div class="grid-item">
+              <div class="flip-card">
+                <div class="flip-card-inner">
+                  <div class="flip-card-front">
+                    <img src="Cam_icon.JPG" alt="Cam_icon" style="width:300px;height:300px;">
+                  </div>
+                  <div class="flip-card-back">
+                    <h1>Cameron Dyer</h1> 
+                    <p id="aboutus">Cameron's first experience with coding was with Scratch however, he quickly developed into being able to do Arduino code. Last year he bagan to start doing website coding in the form of HTML and CSS whilst still being relatively inexperieced at Javascript.</p> 
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-item">
+              <div class="flip-card">
+                <div class="flip-card-inner">
+                  <div class="flip-card-front">
+                    <img src="Hewitt_icon.jpeg" alt="Hewitt_icon" style="width:300px;height:300px;">
+                  </div>
+                  <div class="flip-card-back">
+                    <h1>Hewitt Ho</h1> 
+                    <p id="aboutus">Hewitt began coding websites in early 2019 for a different school project, by learning the basics of HTML, CSS and Javascript. Since then, he has learned more advanced Javascript and a bit of Python. Lately he has been working on Leaflet amongst other things.</p> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+    
+        <p id="description">This website is a collaberative project for the coders' grade 9 dashboard project. Originally, it was supposed to be unit surrounding robotics but under the recent circumstances, several courses have needed to adapt their curriculum and this project was born. It introduced a number of new coding terms and resources such as geojson with Leaflet which allowed us to create this dashboard you see before you.</p>
+      
       </center>
-              
-        <div class="footer">
-            <p id="demo"></p>
-        </div>
+      
+    </div>
+            
+      <div class="footer">
+          <p id="demo"></p>
+      </div>
 
     </body>
     

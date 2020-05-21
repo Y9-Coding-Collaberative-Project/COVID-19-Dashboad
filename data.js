@@ -22,6 +22,12 @@ function api() {
 }
 
 function rundata(response) {
+    /*
+    document.getElementById("map").remove();
+    newmap = document.createElement('div');
+    newmap.innerHTML = '<div id="map" style="width: 100%; height: 300;"></div>';
+    setMap();
+    */
     console.log(response);
     console.log("Hello World");
     data = response;

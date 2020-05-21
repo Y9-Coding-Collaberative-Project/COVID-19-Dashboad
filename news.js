@@ -6,7 +6,7 @@ function check() {
         var diffMinutes = parseInt((currentdate - firebasedate) / (1000 * 60), 10); 
         console.log(diffMinutes);
         if (diffMinutes > 60) {
-            $.getJSON("https://newsapi.org/v2/top-headlines?q=coronavirus&apiKey=2b0a07a2614f40bfae6b33a3f02b3b72", function(json) {
+            $.getJSON("https://newsapi.org/v2/everything?q=coronavirus&language=en&sortby=relevancy&apiKey=2b0a07a2614f40bfae6b33a3f02b3b72", function(json) {
             NEWS = json
             buildNews(NEWS)
             db.collection("app").doc("news").update({
@@ -26,16 +26,13 @@ function check() {
 }
 
 function buildNews(NEWS) {
-    for (let i = 0; i < NEWS.articles.length; i++) {
+    for (let i = 0; i < 10; i++) {
         article = NEWS.articles[i];
-        e = document.createElement('div')
-        e.classList.add('card')
-        e.classList.add('card-body')
-        e.classList.add('newscard')
-        viewFunc = "window.open('" + NEWS.articles[i].url + "')"
-        // viewFunc = "viewArticle('" + i + "')"
-        e.innerHTML = '<h4>' + article.title + '</h4> <button onclick="' + viewFunc + '" class="eon-text">More Info</button>'
-        document.getElementById('news').appendChild(e)                    
+        console.log(article)
+        view = "window.open('" + article['url'] + "')"
+        add = document.createElement('div')
+        add.innerHTML = '<h4>' + article['title'] + '</h4> <p>' + article['content'] + '</p> <button onclick="' + view + '">More Info</button>'
+        document.getElementById('news').appendChild(add)                    
         document.getElementById('news').appendChild(document.createElement("br"))
     }
 }
