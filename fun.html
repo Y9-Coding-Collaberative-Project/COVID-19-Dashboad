@@ -25,21 +25,21 @@
         <div class="content">
           <form id="a">
               <p id="1"></p>
-              <input class="true" type="radio" name="answer"> True<br>
-              <input class="false" type="radio" name="answer"> False<br>
+              <input id="atrue" type="radio" name="answer"> True<br>
+              <input id="afalse" type="radio" name="answer"> False<br>
           </form>
           <form id="b">
             <p id="2"></p>
-            <input class="true" type="radio" name="answer"> True<br>
-            <input class="false" type="radio" name="answer"> False<br>
+            <input id="btrue" type="radio" name="answer"> True<br>
+            <input id="bfalse" type="radio" name="answer"> False<br>
           </form>
           <form id="c">
             <p id="3"></p>
-            <input class="true" type="radio" name="answer"> True<br>
-            <input class="false" type="radio" name="answer"> False<br>
+            <input id="ctrue" type="radio" name="answer"> True<br>
+            <input id="cfalse" type="radio" name="answer"> False<br>
           </form>
-          <input id="submitbutton" type="submit" value="See Results" onclick="answer()">
-          <p id="result">Your result will show up here!</p>
+          <input id="submitbutton" type="submit" value="See Results" onclick="results()">
+          <p id="result">Your results will show up here!</p>
         </div>
             
         <div class="footer">
@@ -79,15 +79,49 @@
         document.getElementById("3").innerHTML = working[2];
       }
 
-      function answer() {
-        if (document.getElementById("true").checked == true) {
-            document.getElementById("result").style.color = "Red"
-            document.getElementById("result").innerHTML = "Incorrect - Try Again"
-        } else if (document.getElementById("false").checked == true) {
-            document.getElementById("result").style.color = "Green"
-            document.getElementById("result").innerHTML = "Correct!"
+      function results() {
+        document.getElementById("result").style.color = "black"
+        document.getElementById("result").innerHTML = "Your results will show up here!"
+        tally = 0;
+        if (answers[0] == true) {
+          if (document.getElementById("atrue").checked) {
+            tally += 1;
+          }
         } else {
-            alert("Please Answer All The Questions Before Submitting")
+          if (document.getElementById("afalse").checked) {
+            tally += 1;
+          }  
+        }
+        if (answers[1] == true) {
+          if (document.getElementById("btrue").checked) {
+            tally += 1;
+          }
+        } else {
+          if (document.getElementById("bfalse").checked) {
+            tally += 1;
+          }  
+        }
+        if (answers[2] == true) {
+          if (document.getElementById("ctrue").checked) {
+            tally += 1;
+          }
+        } else {
+          if (document.getElementById("cfalse").checked) {
+            tally += 1;
+          }
+        }
+        console.log(tally);
+        if (document.getElementById("atrue").checked == false && document.getElementById("afalse").checked == false || document.getElementById("btrue").checked == false && document.getElementById("bfalse").checked == false || document.getElementById("ctrue").checked == false && document.getElementById("cfalse").checked == false) {
+          alert("Please Answer All The Questions Before Submitting");
+        } else if (tally == working.length) {
+          document.getElementById("result").style.color = "green";
+          document.getElementById("result").innerHTML = "You got a perfect score!";
+        } else if (tally == 0) {
+          document.getElementById("result").style.color = "red";
+          document.getElementById("result").innerHTML = "You did not get any questions right. Review the other pages of this website and then try again!";
+        } else {
+          document.getElementById("result").style.color = "blue";
+          document.getElementById("result").innerHTML = "Some of your answers are correct, keep going until you get 100%. You got this!";
         }
       }
 

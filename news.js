@@ -6,7 +6,7 @@ function check() {
         var diffMinutes = parseInt((currentdate - firebasedate) / (1000 * 60), 10); 
         console.log(diffMinutes);
         if (diffMinutes > 60) {
-            $.getJSON("https://newsapi.org/v2/everything?q=coronavirus&language=en&sortby=relevancy&apiKey=2b0a07a2614f40bfae6b33a3f02b3b72", function(json) {
+            $.getJSON("https://newsapi.org/v2/everything?q=coronavirus&language=en&sortby=relevancy&apiKey=c735f0bd7f8344ca8efbe074446b7e87", function(json) {
             NEWS = json
             buildNews(NEWS)
             db.collection("app").doc("news").update({
@@ -14,8 +14,7 @@ function check() {
                 news: currentdate
             })
             });
-        }
-        else {
+        } else {
             // USE CACHED NEWS
             db.collection("app").doc("news").get().then(function(doc) {
                 NEWS = doc.data().newscache

@@ -83,6 +83,7 @@ body {
     }
 }
 
+/*
 .dropdown {
     float: left;
     overflow: hidden;
@@ -128,6 +129,7 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+*/
 
 .flip-card {
     background-color: transparent;
@@ -184,6 +186,5 @@ body {
 
 #demo {
     height: 30px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
 }

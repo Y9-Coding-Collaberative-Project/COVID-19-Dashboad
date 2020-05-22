@@ -3,94 +3,36 @@ var global = [];
 
 function setMap() {
     map = new L.Map("map"); // creates a map at HTML div called "map"
-    var cartocdn = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
+    cartocdn = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
     cartoAttrib = "Carto geodatabase is good for this application"; // ???
     carto = new L.TileLayer(cartocdn);
     map.setView([51.5, 0.12],2); // centered on London lat, long
     map.addLayer(carto);
+    layergroup = L.layerGroup().addTo(map);
 }
 
 function api() {
     axios.get("https://api.covid19api.com/summary")
         .then(response => {
             document.getElementById("date").innerHTML = "COVID-19 Cases By Type (Latest Update: " + response.data['Date'] + ")"; // displays time of last update in HTML element called "date"
-            rundata(response.data); // runs parseData with the new data
+            sort(response.data); // runs parseData with the new data
         })
         .catch(error => {
             console.log(error); // debugging data
         })
 }
 
-function rundata(response) {
-    /*
-    document.getElementById("map").remove();
-    newmap = document.createElement('div');
-    newmap.innerHTML = '<div id="map" style="width: 100%; height: 300;"></div>';
-    setMap();
-    */
-    console.log(response);
+function sort(response) {
     console.log("Hello World");
+    console.log(response);
     data = response;
     global = Object.values(data['Global'])
     allvalues = Object.values(data['Countries']);
-    for (i = 0; i < allvalues.length; i++) {
-        shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
+    for (let i = 0; i < allvalues.length; i++) {
         a = allvalues[i]['Country'];
-        b = allvalues[i]['TotalConfirmed'];
-        c = allvalues[i]['TotalDeaths'];
-        d = allvalues[i]['TotalRecovered'];
-        e = allvalues[i]['NewConfirmed'];
-        f = allvalues[i]['NewDeaths'];
-        g = allvalues[i]['NewRecovered'];
-        h = b - c - d; // Active Cases
         if (places.length < allvalues.length) {
             places.push(a)
         }
-        if (countries[shortcode] != undefined) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
-            latitude = countries[shortcode][0];
-            longitude = countries[shortcode][1];
-            if (document.getElementById("total").checked == true && b > 0) {
-                L.circle([latitude,longitude],{color:'black',radius:b}).addTo(map).bindPopup("'" + a + " : " + b.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-            if (document.getElementById("deaths").checked == true && c > 0) {
-                L.circle([latitude,longitude],{color:'red',radius:c}).addTo(map).bindPopup("'" + a + " : " + c.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-            if (document.getElementById("recoveries").checked == true && d > 0) {
-                L.circle([latitude,longitude],{color:'green',radius:d}).addTo(map).bindPopup("'" + a + " : " + d.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-            if (document.getElementById("new_confirmed").checked == true && e > 0) {
-                L.circle([latitude,longitude],{color:'grey',radius:e}).addTo(map).bindPopup("'" + a + " : " + e.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-            if (document.getElementById("new_deaths").checked == true && f > 0) {
-                L.circle([latitude,longitude],{color:'orange',radius:f}).addTo(map).bindPopup("'" + a + " : " + f.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-            if (document.getElementById("new_recoveries").checked == true && g > 0) {
-                L.circle([latitude,longitude],{color:'blue',radius:g}).addTo(map).bindPopup("'" + a + " : " + g.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-            if (document.getElementById("active").checked == true && h > 0) {
-                L.circle([latitude,longitude],{color:'yellow',radius:h}).addTo(map).bindPopup("'" + a + " : " + h.toLocaleString() + "'"); // draws circle with the variables as arguments
-            }
-        }
-/*
-        var table = document.getElementById("everything");
-        var row = table.insertRow();
-        var column1 = row.insertCell(0)
-        var column2 = row.insertCell(1)
-        var column3 = row.insertCell(2)
-        var column4 = row.insertCell(3)
-        var column5 = row.insertCell(4)
-        var column6 = row.insertCell(5)
-        var column7 = row.insertCell(6)
-        var column8 = row.insertCell(7)
-        column1.innerhtml = a;                
-        column2.innerhtml = b;
-        column3.innerhtml = h;
-        column4.innerhtml = c;
-        column5.innerhtml = d;
-        column6.innerhtml = e;
-        column7.innerhtml = f;
-        column8.innerhtml = g;
-*/
     }
     console.log(places)
 }
@@ -188,7 +130,7 @@ function autocomplete(inp, arr) {
 }
 
 function keyBind() {
-    var input = document.getElementById("find");
+    input = document.getElementById("find");
     input.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -204,8 +146,8 @@ function country() {
     if (places.includes(correct) == false ) {
         alert("The Country You Entered Is Not Valid, Please Retry Again");
     }
-    for (i = 0; i < allvalues.length; i++) {
-        var thing = allvalues[i]['TotalConfirmed'] - allvalues[i]['TotalDeaths'] - allvalues[i]['TotalRecovered']
+    for (let i = 0; i < allvalues.length; i++) {
+        thing = allvalues[i]['TotalConfirmed'] - allvalues[i]['TotalDeaths'] - allvalues[i]['TotalRecovered']
         if (allvalues[i]['Country'] == correct) {
             console.log(allvalues[i]);
             document.getElementById("answer").innerHTML = "Total Confirmed Cases: " + allvalues[i]['TotalConfirmed'].toLocaleString() + "<br>Active: " + thing.toLocaleString() + "<br>Deaths: " + allvalues[i]['TotalDeaths'].toLocaleString() + "<br>Recoveries: " + allvalues[i]['TotalRecovered'].toLocaleString() + "<br>New Confirmed: " + allvalues[i]['NewConfirmed'].toLocaleString() + "<br>New Deaths: " + allvalues[i]['NewDeaths'].toLocaleString() + "<br>New Recoveries: " + allvalues[i]['NewRecovered'].toLocaleString();
@@ -261,7 +203,47 @@ function part2() {
     }
 }
 
-google.charts.load('current', {'packages':['corechart']});
+function markers() {
+    layergroup.clearLayers();
+    for (let i = 0; i < allvalues.length; i++) {
+        shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
+        a = allvalues[i]['Country'];
+        b = allvalues[i]['TotalConfirmed'];
+        c = allvalues[i]['TotalDeaths'];
+        d = allvalues[i]['TotalRecovered'];
+        e = allvalues[i]['NewConfirmed'];
+        f = allvalues[i]['NewDeaths'];
+        g = allvalues[i]['NewRecovered'];
+        h = b - c - d; // Active Cases
+        if (countries[shortcode] != undefined) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
+            latitude = countries[shortcode][0];
+            longitude = countries[shortcode][1];
+            if (document.getElementById("total").checked == true && b > 0) {
+                L.circle([latitude,longitude],{color:'black',radius:b}).addTo(layergroup).bindPopup("'" + a + " : " + b.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+            if (document.getElementById("deaths").checked == true && c > 0) {
+                L.circle([latitude,longitude],{color:'red',radius:c}).addTo(layergroup).bindPopup("'" + a + " : " + c.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+            if (document.getElementById("recoveries").checked == true && d > 0) {
+                L.circle([latitude,longitude],{color:'green',radius:d}).addTo(layergroup).bindPopup("'" + a + " : " + d.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+            if (document.getElementById("new_confirmed").checked == true && e > 0) {
+                L.circle([latitude,longitude],{color:'grey',radius:e}).addTo(layergroup).bindPopup("'" + a + " : " + e.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+            if (document.getElementById("new_deaths").checked == true && f > 0) {
+                L.circle([latitude,longitude],{color:'orange',radius:f}).addTo(layergroup).bindPopup("'" + a + " : " + f.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+            if (document.getElementById("new_recoveries").checked == true && g > 0) {
+                L.circle([latitude,longitude],{color:'blue',radius:g}).addTo(layergroup).bindPopup("'" + a + " : " + g.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+            if (document.getElementById("active").checked == true && h > 0) {
+                L.circle([latitude,longitude],{color:'yellow',radius:h}).addTo(layergroup).bindPopup("'" + a + " : " + h.toLocaleString() + "'"); // draws circle with the variables as arguments
+            }
+        }
+    }
+}
+
+google.charts.load("current", {'packages':['corechart']});
 google.charts.setOnLoadCallback(world);
 
 function world() {
@@ -276,8 +258,29 @@ function world() {
         ['Recovered', global[5]],
     ]);
     // Optional; add a title and set the width and height of the chart
-    var options = {'title':'Confirmed Cases By Status Worldwide (' + total.toLocaleString() + ' Total)'};
+    options = {'title':'Confirmed Cases By Status Worldwide (' + total.toLocaleString() + ' Total)'};
     // Display the chart inside the <div> element with id="piechart"
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    chart = new google.visualization.PieChart(document.getElementById("piechart"));
     chart.draw(graph, options);
 }
+
+/*
+var table = document.getElementById("everything");
+var row = table.insertRow();
+var column1 = row.insertCell(0)
+var column2 = row.insertCell(1)
+var column3 = row.insertCell(2)
+var column4 = row.insertCell(3)
+var column5 = row.insertCell(4)
+var column6 = row.insertCell(5)
+var column7 = row.insertCell(6)
+var column8 = row.insertCell(7)
+column1.innerhtml = a;                
+column2.innerhtml = b;
+column3.innerhtml = h;
+column4.innerhtml = c;
+column5.innerhtml = d;
+column6.innerhtml = e;
+column7.innerhtml = f;
+column8.innerhtml = g;
+*/
