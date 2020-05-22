@@ -8,7 +8,7 @@ function setMap() {
     carto = new L.TileLayer(cartocdn);
     map.setView([51.5, 0.12],2); // centered on London lat, long
     map.addLayer(carto);
-    layergroup = L.layerGroup().addTo(map);
+    layergroup = L.layerGroup().addTo(map); // creates a layer
 }
 
 function api() {
@@ -204,7 +204,7 @@ function part2() {
 }
 
 function markers() {
-    layergroup.clearLayers();
+    layergroup.clearLayers(); // clears the layer with all markers
     for (let i = 0; i < allvalues.length; i++) {
         shortcode = allvalues[i]['CountryCode'].toLowerCase(); // converts country code into lowercase to get coordinates (second data set uses a lowercase code)
         a = allvalues[i]['Country'];
@@ -214,7 +214,7 @@ function markers() {
         e = allvalues[i]['NewConfirmed'];
         f = allvalues[i]['NewDeaths'];
         g = allvalues[i]['NewRecovered'];
-        h = b - c - d; // Active Cases
+        h = b - c - d; // active cases
         if (countries[shortcode] != undefined) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
             latitude = countries[shortcode][0];
             longitude = countries[shortcode][1];

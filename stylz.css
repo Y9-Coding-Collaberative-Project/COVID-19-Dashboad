@@ -83,6 +83,10 @@ body {
     }
 }
 
+.navbar a:hover {
+    background-color: #7d7878;
+}
+
 /*
 .dropdown {
     float: left;

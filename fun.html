@@ -24,21 +24,18 @@
         
         <div class="content">
           <form id="a">
-              <p id="1"></p>
-              <input id="atrue" type="radio" name="answer"> True<br>
-              <input id="afalse" type="radio" name="answer"> False<br>
-          </form>
-          <form id="b">
+            <p id="1"></p>
+            <input id="atrue" type="radio" name="a"> True<br>
+            <input id="afalse" type="radio" name="a"> False<br>
             <p id="2"></p>
-            <input id="btrue" type="radio" name="answer"> True<br>
-            <input id="bfalse" type="radio" name="answer"> False<br>
-          </form>
-          <form id="c">
+            <input id="btrue" type="radio" name="b"> True<br>
+            <input id="bfalse" type="radio" name="b"> False<br>
             <p id="3"></p>
-            <input id="ctrue" type="radio" name="answer"> True<br>
-            <input id="cfalse" type="radio" name="answer"> False<br>
+            <input id="ctrue" type="radio" name="c"> True<br>
+            <input id="cfalse" type="radio" name="c"> False<br>
           </form>
           <input id="submitbutton" type="submit" value="See Results" onclick="results()">
+          <button id="redo" style="visibility: hidden;" onclick="roll()">Click To Try A New Problem Set!</button>
           <p id="result">Your results will show up here!</p>
         </div>
             
@@ -53,23 +50,27 @@
       roll();
 
       function roll() {
-        all = ["The Coronavirus is a hoax","If you get the Coronavirus, you die immidately","Social distancing means high-fiving everyone you see","The US has the most confirmed cases of COVID-19","Coronavirus means 'hello' in Chinese"]
-        cheatsheet = [false,false,false,true,false]
-        working = [];
-        answers = [];
-        while (working.length < 3) {
-          var a = Math.random();
-          var b = a*5;
-          var c = Math.floor(b);
+        document.getElementById("result").style.color = "black" // resets results
+        document.getElementById("result").innerHTML = "Your results will show up here!" // resets results
+        document.getElementById("redo").style.visibility = "hidden"; // hides redo button
+        all = ["The Coronavirus is a hoax","If you get the Coronavirus, you die immidately","Social distancing means high-fiving everyone you see","The US has the most confirmed cases of COVID-19","Coronavirus means 'hello' in Chinese"] // all questions go here
+        cheatsheet = [false,false,false,true,false] // all answers go here (corresponding to the question with the same index)
+        working = []; // active questions are added here
+        answers = []; // active answers are added here
+        amount = 3; // change to change the amount of questions included on the quiz
+        while (working.length < amount) {
+          var a = Math.random(); // creates a random number ≥ 0 and < 1
+          var b = a * all.length; // multiplies the number by the amount of total questions
+          var c = Math.floor(b); // rounds the number down to the nearest integer
           console.log(c)
-          if (working.includes(all[c]) == true) {
+          if (working.includes(all[c]) !== true) {
+            working.push(all[c]) // adds the question with the index of the number (c) to the array of active questions
+            answers.push(cheatsheet[c])  // adds the answer with the index of the number (c) to the array of active answers
+          } else { // if the question is already included in the quiz, another random number will be generated (keeps going until there is a unique question)
             var a = Math.random();
-            var b = a*5;
+            var b = a * all.length;
             var c = Math.floor(b);
             console.log(c)
-          } else {
-            working.push(all[c])
-            answers.push(cheatsheet[c])
           }
         }
         console.log(working);
@@ -80,9 +81,9 @@
       }
 
       function results() {
-        document.getElementById("result").style.color = "black"
-        document.getElementById("result").innerHTML = "Your results will show up here!"
-        tally = 0;
+        document.getElementById("result").style.color = "black" // resets results
+        document.getElementById("result").innerHTML = "Your results will show up here!" // resets results
+        tally = 0; // creates a count of the number of correct answers
         if (answers[0] == true) {
           if (document.getElementById("atrue").checked) {
             tally += 1;
@@ -111,11 +112,12 @@
           }
         }
         console.log(tally);
-        if (document.getElementById("atrue").checked == false && document.getElementById("afalse").checked == false || document.getElementById("btrue").checked == false && document.getElementById("bfalse").checked == false || document.getElementById("ctrue").checked == false && document.getElementById("cfalse").checked == false) {
+        if (document.getElementById("atrue").checked == false && document.getElementById("afalse").checked == false || document.getElementById("btrue").checked == false && document.getElementById("bfalse").checked == false || document.getElementById("ctrue").checked == false && document.getElementById("cfalse").checked == false) { // ensures all the questions are answered
           alert("Please Answer All The Questions Before Submitting");
         } else if (tally == working.length) {
           document.getElementById("result").style.color = "green";
           document.getElementById("result").innerHTML = "You got a perfect score!";
+          document.getElementById("redo").style.visibility = "visible";
         } else if (tally == 0) {
           document.getElementById("result").style.color = "red";
           document.getElementById("result").innerHTML = "You did not get any questions right. Review the other pages of this website and then try again!";
@@ -129,7 +131,7 @@
 
       function footer() {
           var x = document.lastModified;
-          document.getElementById("demo").innerHTML = "Last Refreshed " + x;            
+          document.getElementById("demo").innerHTML = "Last Modified " + x;            
       }
 
     </script>
