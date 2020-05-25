@@ -19,7 +19,7 @@
             .columns {
                 float: left;
                 padding: 8px;
-                height: 90%;
+                height: 100%;
             }
 
             #left_column {
@@ -38,6 +38,7 @@
                 width: 31.25%;
                 background-color:#ff0000;
                 color: white;
+                z-index: 1;
             }
 
             .step1 {
@@ -100,6 +101,22 @@
                 box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
             }
 
+            #showtable {
+                width: 15%;
+                background-color: rgb(196, 1, 1);
+                color: #fff;
+                cursor: pointer;
+                transition: transform 0.3s;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                font-size: 15px;
+            }
+
+            #showtable:hover {
+                background-color:orangered;
+                box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            }
+
             .indent{
                 margin-left: 25px;
             }
@@ -109,6 +126,7 @@
                 border-collapse: collapse;
                 width: 100%;
                 margin-bottom: 50px;
+                z-index: 12;
             }
 
             td, th {
@@ -116,6 +134,7 @@
                 text-align: left;
                 padding: 8px;
                 color: black;
+                
             }
 
             th {
@@ -123,7 +142,58 @@
             }
 
             td {
-                background-color:blue;
+                background-color:white;
+            }
+
+            .panel_flip {
+                position: relative;
+                height: 100%;
+            }
+        
+            .panel_front {
+                height: inherit;
+                position: absolute;
+                top: 0;
+                -webkit-transform: rotateX(0deg) rotateY(0deg);
+                -moz-transform: rotateX(0deg) rotateY(0deg);
+                -webkit-transform-style: preserve-3d;
+                -moz-transform-style: preserve-3d;
+                -webkit-backface-visibility: hidden;
+                -moz-backface-visibility: hidden;
+                -webkit-transition: all .4s ease-in-out;
+                -moz-transition: all .4s ease-in-out;
+                -ms-transition: all .4s ease-in-out;
+                -o-transition: all .4s ease-in-out;
+                transition: all .4s ease-in-out;
+            }
+        
+            .panel_back {
+                height: inherit;
+                position: absolute;
+                top: 0;
+                -webkit-transform: rotateY(-180deg);
+                -moz-transform: rotateY(-180deg);
+                -webkit-transform-style: preserve-3d;
+                -moz-transform-style: preserve-3d;
+                -webkit-backface-visibility: hidden;
+                -moz-backface-visibility: hidden;
+                -webkit-transition: all .4s ease-in-out;
+                -moz-transition: all .4s ease-in-out;
+                -ms-transition: all .4s ease-in-out;
+                -o-transition: all .4s ease-in-out;
+                transition: all .4s ease-in-out;
+            }
+        
+            .panel_flip.flip .panel_front {
+                z-index: 9;
+                -webkit-transform: rotateY(180deg);
+                -moz-transform: rotateY(180deg);
+            }
+        
+            .panel_flip.flip .panel_back {
+                z-index: 10;
+                -webkit-transform: rotateX(0deg) rotateY(0deg);
+                -moz-transform: rotateX(0deg) rotateY(0deg);
             }
 
         </style>
@@ -151,9 +221,7 @@
 
             <div class="columns" id="middle_column">
                 <h1 id="date"></h1>
-                <div id="mapcontainer">
-                    <div id="map" style='width: 100%; height: 300;'></div>
-                </div>
+                <div id="map" style='width: 100%; height: 300;'></div>
                 <br>
                 <form id="select">
                     <input type="checkbox" name="type" id="total" onchange="markers()"> Total Confirmed Cases<br>
@@ -166,6 +234,7 @@
                     <input type="checkbox" name="type" class="indent" id="new_deaths" onchange="part2();markers()"> New Deaths<br>
                     <input type="checkbox" name="type" class="indent" id="new_recoveries" onchange="part2();markers()"> New Recoveries<br>
                 </form>
+                <button onclick="markers()" id="showtable">Show All</button>
                 <table id="everything">
                     <tr>
                         <th>Country</th>
@@ -178,12 +247,22 @@
                         <th>New Recoveries</th>
                     </tr>
                 </table>
-                <button onclick="markers()">Show All</button>
             </div>
+
             <div class="columns" id="right_column">
                 <h1>General Global Stats</h1>
-                <p id="worldstats"></p>
-                <div id="piechart"></div>
+                <div class="panel-body" style="text-align:center; height:200px;">
+                    <div class="panel_flip">
+                    <div class="panel_front" style="width:100%;height:100%;">
+                        <p id="worldstats"></p>
+                        <a class="flip_cases_front" href="javascript: void(0);" style="clear: both;display: block;position:absolute;bottom:8px;width:100%;">Show Graph</a>
+                    </div>
+                    <div class="panel_back" style="width:100%;height:100%;">
+                        <div id="piechart"></div>
+                        <a class="flip_cases_back" href="javascript: void(0);" style="clear: both;position: absolute;width:100%;bottom:8px;left:0;">Show Statistics</a>
+                    </div>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -206,6 +285,15 @@
             var x = document.lastModified;
             document.getElementById("demo").innerHTML = "Last Modified " + x;            
         }
+
+        $(function() {    
+            $('.flip_cases_front').on('click', function() {
+                $(this).parent().parent().addClass('flip');
+            });
+            $('.flip_cases_back').on('click', function() {
+                $(this).parent().parent().removeClass('flip');
+            });
+        });
 
     </script>
 
