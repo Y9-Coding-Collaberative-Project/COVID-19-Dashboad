@@ -75,21 +75,20 @@
                 color: #ffffff; 
             }
 
-            #find {
+            #find, #submit {
                 border: 1px solid transparent;
                 padding: 5px;
-                width: 75%;
                 height: 35px;
                 font-size: 16px;
+            }
+
+            #find {
+                width: 75%;
                 background-color: #e9e8e8;
             }
 
             #submit {
-                border: 1px solid transparent;
-                padding: 5px;
                 width: 25%;
-                height: 35px;
-                font-size: 16px;
                 background-color: crimson;
                 color: #fff;
                 cursor: pointer;
@@ -105,8 +104,26 @@
                 margin-left: 25px;
             }
 
-            table, th, td {
-                border: 1px solid black;
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 50px;
+            }
+
+            td, th {
+                border: 1px solid #141414;
+                text-align: left;
+                padding: 8px;
+                color: black;
+            }
+
+            th {
+                background-color:white;
+            }
+
+            td {
+                background-color:blue;
             }
 
         </style>
@@ -161,8 +178,8 @@
                         <th>New Recoveries</th>
                     </tr>
                 </table>
+                <button onclick="markers()">Show All</button>
             </div>
-
             <div class="columns" id="right_column">
                 <h1>General Global Stats</h1>
                 <p id="worldstats"></p>

@@ -23,7 +23,7 @@
         </div>
         
         <div class="content">
-          <form id="a">
+          <form id="quiz">
             <p id="1"></p>
             <input id="atrue" type="radio" name="a"> True<br>
             <input id="afalse" type="radio" name="a"> False<br>
@@ -50,11 +50,12 @@
       roll();
 
       function roll() {
-        document.getElementById("result").style.color = "black" // resets results
-        document.getElementById("result").innerHTML = "Your results will show up here!" // resets results
+        document.getElementById("quiz").reset();
+        document.getElementById("result").style.color = "black"; // resets results
+        document.getElementById("result").innerHTML = "Your results will show up here!"; // resets results
         document.getElementById("redo").style.visibility = "hidden"; // hides redo button
-        all = ["The Coronavirus is a hoax","If you get the Coronavirus, you die immidately","Social distancing means high-fiving everyone you see","The US has the most confirmed cases of COVID-19","Coronavirus means 'hello' in Chinese"] // all questions go here
-        cheatsheet = [false,false,false,true,false] // all answers go here (corresponding to the question with the same index)
+        all = ["The Coronavirus is a hoax","If you get the Coronavirus, you die immidately","Social distancing means high-fiving everyone you see","The US has the most confirmed cases of COVID-19","Coronavirus means 'hello' in Chinese"]; // all questions go here
+        cheatsheet = [false,false,false,true,false]; // all answers go here (corresponding to the question with the same index)
         working = []; // active questions are added here
         answers = []; // active answers are added here
         amount = 3; // change to change the amount of questions included on the quiz
@@ -81,8 +82,8 @@
       }
 
       function results() {
-        document.getElementById("result").style.color = "black" // resets results
-        document.getElementById("result").innerHTML = "Your results will show up here!" // resets results
+        document.getElementById("result").style.color = "black"; // resets results
+        document.getElementById("result").innerHTML = "Your results will show up here!"; // resets results
         tally = 0; // creates a count of the number of correct answers
         if (answers[0] == true) {
           if (document.getElementById("atrue").checked) {

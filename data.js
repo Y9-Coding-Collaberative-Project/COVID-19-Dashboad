@@ -215,6 +215,24 @@ function markers() {
         f = allvalues[i]['NewDeaths'];
         g = allvalues[i]['NewRecovered'];
         h = b - c - d; // active cases
+        var table = document.getElementById("everything");
+        var row = table.insertRow(-1);
+        var column1 = row.insertCell(0);
+        var column2 = row.insertCell(1);
+        var column3 = row.insertCell(2);
+        var column4 = row.insertCell(3);
+        var column5 = row.insertCell(4);
+        var column6 = row.insertCell(5);
+        var column7 = row.insertCell(6);
+        var column8 = row.insertCell(7);
+        column1.innerHTML = a.toLocaleString();                
+        column2.innerHTML = b.toLocaleString();
+        column3.innerHTML = h.toLocaleString();
+        column4.innerHTML = c.toLocaleString();
+        column5.innerHTML = d.toLocaleString();
+        column6.innerHTML = e.toLocaleString();
+        column7.innerHTML = f.toLocaleString();
+        column8.innerHTML = g.toLocaleString();
         if (countries[shortcode] != undefined) { // prevents error by only looping if its not undefined and only draws circles if there are any cases in the current country
             latitude = countries[shortcode][0];
             longitude = countries[shortcode][1];
@@ -263,24 +281,3 @@ function world() {
     chart = new google.visualization.PieChart(document.getElementById("piechart"));
     chart.draw(graph, options);
 }
-
-/*
-var table = document.getElementById("everything");
-var row = table.insertRow();
-var column1 = row.insertCell(0)
-var column2 = row.insertCell(1)
-var column3 = row.insertCell(2)
-var column4 = row.insertCell(3)
-var column5 = row.insertCell(4)
-var column6 = row.insertCell(5)
-var column7 = row.insertCell(6)
-var column8 = row.insertCell(7)
-column1.innerhtml = a;                
-column2.innerhtml = b;
-column3.innerhtml = h;
-column4.innerhtml = c;
-column5.innerhtml = d;
-column6.innerhtml = e;
-column7.innerhtml = f;
-column8.innerhtml = g;
-*/
