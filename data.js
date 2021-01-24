@@ -265,15 +265,15 @@ google.charts.load("current", {'packages':['corechart']});
 google.charts.setOnLoadCallback(world);
 
 function world() {
-    total = global[1];
+    total = global["TotalConfirmed"];
     console.log(total);
-    active = global[1] - global[3] - global[5]; // determines the amount of active cases by subtracting the total cases by the closed cases (deaths and recoveries)
-    document.getElementById("worldstats").innerHTML = "Total Confirmed Cases: " + total.toLocaleString() + "<br>Active: " + active.toLocaleString() + "<br>Deaths: " + global[3].toLocaleString() + "<br>Recoveries: " + global[5].toLocaleString();
+    active = total - global["TotalDeaths"] - global["TotalRecovered"]; // determines the amount of active cases by subtracting the total cases by the closed cases (deaths and recoveries)
+    document.getElementById("worldstats").innerHTML = "Total Confirmed Cases: " + total.toLocaleString() + "<br>Active: " + active.toLocaleString() + "<br>Deaths: " + global["TotalDeaths"].toLocaleString() + "<br>Recoveries: " + global["TotalRecovered"].toLocaleString();
     var graph = google.visualization.arrayToDataTable([
         ['Type', 'Amount'], // establishes the arguments
         ['Active', active],
-        ['Dead', global[3]],
-        ['Recovered', global[5]],
+        ['Dead', global["TotalDeaths"]],
+        ['Recovered', global["TotalRecovered"]],
     ]);
     // Optional; add a title and set the width and height of the chart
     options = {'title':'Confirmed Cases By Status Worldwide (' + total.toLocaleString() + ' Total)'};
